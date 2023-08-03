@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:15.3
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_DB: CarCatalog
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
