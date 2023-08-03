@@ -60,9 +60,11 @@ public class CatalogView extends VerticalLayout {
         this.carService = carService;
         Button addButton = new Button("Создать");
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addButton.addClickListener(event ->
-                CreationDialog.getCreationDialog(carService, grid, carList).open()
-        );
+        addButton.addClickListener(event -> {
+            carList = carService.getAll();
+            grid.setItems(carList);
+            CreationDialog.getCreationDialog(carService, grid, carList).open();
+        });
 
         //Фильтры
         HorizontalLayout filtersLayout = new HorizontalLayout();
@@ -81,7 +83,7 @@ public class CatalogView extends VerticalLayout {
         typeField.setLabel("Тип ТС");
         typeField.setItems("", "Легковой", "Автобус", "Грузовой");
         typeField.setValue("");
-        typeField.addValueChangeListener(e->find());
+        typeField.addValueChangeListener(e -> find());
         typeField.setWidth("14%");
 
         trailerField = new Select<>();
@@ -89,7 +91,7 @@ public class CatalogView extends VerticalLayout {
         trailerField.setItems("", "Есть", "Нет");
         trailerField.setWidth("auto");
         trailerField.setValue("");
-        trailerField.addValueChangeListener(e->find());
+        trailerField.addValueChangeListener(e -> find());
         trailerField.setWidth("14%");
 
         List<TextField> fields = new ArrayList<>();
@@ -99,10 +101,10 @@ public class CatalogView extends VerticalLayout {
                 categoryField,
                 numberField,
                 releaseYearField);
-        for (var item:fields
-             ) {
+        for (var item : fields
+        ) {
             item.setValueChangeMode(ValueChangeMode.LAZY);
-            item.addValueChangeListener(e->find());
+            item.addValueChangeListener(e -> find());
             item.setWidth("14%");
             filtersLayout.add(item);
         }
