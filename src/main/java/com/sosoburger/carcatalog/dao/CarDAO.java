@@ -38,5 +38,5 @@ public class CarDAO {
     String type;
 
     @Column(name = "trailer")
-    Boolean trailer;
+    String trailer;
 }

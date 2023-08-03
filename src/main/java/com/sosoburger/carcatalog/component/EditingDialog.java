@@ -14,13 +14,10 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 
-import java.util.List;
-
-public class CreationDialog {
-
-    public static Dialog getCreationDialog(CarService carService, Grid<CarDAO> grid, List<CarDAO> list) {
+public class EditingDialog {
+    public static Dialog getCreationDialog(CarService carService, CarDAO carDAO, Grid<CarDAO> grid) {
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Новое ТС");
+        dialog.setHeaderTitle("Редактировать ТС");
         dialog.setModal(true);
 
         Binder<CarDAO> binder = new Binder<>();
@@ -29,32 +26,37 @@ public class CreationDialog {
 
         //Поля для заполнения и их валидация
         TextField brandField = new TextField("Марка");
+        brandField.setValue(carDAO.getBrand());
         binder.forField(brandField)
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getBrand, CarDAO::setBrand);
 
         TextField modelField = new TextField("Модель");
+        modelField.setValue(carDAO.getModel());
         binder.forField(modelField)
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getModel, CarDAO::setModel);
 
         TextField categoryField = new TextField("Категория");
+        categoryField.setValue(carDAO.getCategory());
         binder.forField(categoryField)
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getCategory, CarDAO::setCategory);
 
         TextField numberField = new TextField("Государственный номер");
+        numberField.setValue(carDAO.getCategory());
         binder.forField(numberField)
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getNumber, CarDAO::setNumber);
 
         TextField releaseYearField = new TextField("Год выпуска");
+        releaseYearField.setValue(carDAO.getReleaseYear());
         binder.forField(releaseYearField)
                 .withValidator(
                         releaseYear -> releaseYear.length() == 4,
                         "Поле должно содержать 4 символа"
                 )
-                .withValidator(releaseYear-> releaseYear.matches("\\d{4}"),
+                .withValidator(releaseYear -> releaseYear.matches("\\d{4}"),
                         "Число должно быть целым, например 2001")
                 .bind(CarDAO::getReleaseYear, CarDAO::setReleaseYear);
 
@@ -64,6 +66,7 @@ public class CreationDialog {
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getType, CarDAO::setType);
         typeField.setItems("Легковой", "Автобус", "Грузовой");
+        typeField.setValue(carDAO.getType());
 
         Select<String> trailerField = new Select<>();
         trailerField.setLabel("Наличие прицепа");
@@ -71,6 +74,7 @@ public class CreationDialog {
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getTrailer, CarDAO::setTrailer);
         trailerField.setItems("Есть", "Нет");
+        trailerField.setValue(carDAO.getTrailer());
 
         dialogLayout.add(brandField, modelField, categoryField, numberField, releaseYearField, typeField, trailerField);
 
@@ -81,17 +85,17 @@ public class CreationDialog {
         //Кнопка сохранения
         Button saveButton = new Button("Сохранить", e -> {
             try {
-                var car = carService.save(new CarDAO(
-                        null,
-                        brandField.getValue(),
-                        modelField.getValue(),
-                        categoryField.getValue(),
-                        numberField.getValue(),
-                        releaseYearField.getValue(),
-                        typeField.getValue(),
-                        trailerField.getValue()));
-                list.add(0, car);
+                carDAO.setBrand(brandField.getValue());
+                carDAO.setModel(modelField.getValue());
+                carDAO.setCategory(categoryField.getValue());
+                carDAO.setNumber(numberField.getValue());
+                carDAO.setReleaseYear(releaseYearField.getValue());
+                carDAO.setType(typeField.getValue());
+                carDAO.setTrailer(trailerField.getValue());
+                carService.save(carDAO);
+
                 grid.getDataProvider().refreshAll();
+
                 dialog.close();
                 Notification notification = Notification
                         .show("ТС успешно сохранено", 2000, Notification.Position.TOP_END);
