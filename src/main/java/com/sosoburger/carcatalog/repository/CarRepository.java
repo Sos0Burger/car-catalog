@@ -11,13 +11,14 @@ public interface CarRepository extends JpaRepository<CarDAO, Integer> {
     CarDAO findByNumber(String number);
 
     //Поиск по всем полям :)
-    List<CarDAO> findByModelContainingAndBrandContainingAndCategoryContainingAndNumberContainingAndReleaseYearContainingAndTypeContainingAndTrailerContaining(
+    List<CarDAO> findByModelContainingIgnoreCaseAndBrandContainingIgnoreCaseAndCategoryContainingIgnoreCaseAndNumberContainingIgnoreCaseAndReleaseYearContainingIgnoreCaseAndTypeContainingIgnoreCaseAndTrailerContainingIgnoreCase(
             String model,
             String brand,
             String category,
             String number,
             String releaseYear,
             String type,
-            String trailer);
+            String trailer
+    );
 
 }

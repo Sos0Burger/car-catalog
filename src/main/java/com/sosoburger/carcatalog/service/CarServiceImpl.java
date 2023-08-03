@@ -47,7 +47,7 @@ public class CarServiceImpl implements CarService {
             String releaseYear,
             String type,
             String trailer) {
-        return carRepository.findByModelContainingAndBrandContainingAndCategoryContainingAndNumberContainingAndReleaseYearContainingAndTypeContainingAndTrailerContaining(
+        return carRepository.findByModelContainingIgnoreCaseAndBrandContainingIgnoreCaseAndCategoryContainingIgnoreCaseAndNumberContainingIgnoreCaseAndReleaseYearContainingIgnoreCaseAndTypeContainingIgnoreCaseAndTrailerContainingIgnoreCase(
                 model,
                 brand,
                 category,
