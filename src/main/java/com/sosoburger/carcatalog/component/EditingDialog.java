@@ -44,7 +44,7 @@ public class EditingDialog {
                 .bind(CarDAO::getCategory, CarDAO::setCategory);
 
         TextField numberField = new TextField("Государственный номер");
-        numberField.setValue(carDAO.getCategory());
+        numberField.setValue(carDAO.getNumber());
         binder.forField(numberField)
                 .asRequired("Поле должно быть заполнено")
                 .bind(CarDAO::getNumber, CarDAO::setNumber);
