@@ -36,4 +36,7 @@ public class CarDAO {
 
     @Column(name = "type")
     String type;
+
+    @Column(name = "trailer")
+    Boolean trailer;
 }

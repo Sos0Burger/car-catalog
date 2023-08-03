@@ -24,6 +24,7 @@ public class CreationDialog {
 
         VerticalLayout dialogLayout = new VerticalLayout();
 
+        //Поля для заполнения и их валидация
         TextField brandField = new TextField("Марка");
         binder.forField(brandField)
                 .asRequired("Поле должно быть заполнено")
@@ -61,10 +62,17 @@ public class CreationDialog {
                 .bind(CarDAO::getType, CarDAO::setType);
         typeField.setItems("Легковой", "Автобус", "Грузовой");
 
+        Select<String> trailerField = new Select<>();
+        typeField.setLabel("Наличие прицепа");
+        binder.forField(typeField)
+                .asRequired("Поле должно быть заполнено")
+                .bind(CarDAO::getType, CarDAO::setType);
+        typeField.setItems("Есть", "Нет");
+
         dialogLayout.add(brandField, modelField, categoryField, numberField, releaseYearField, typeField);
 
         //Кнопка отмены
-        Button cancelButton = new Button("Отменить", e -> dialog.close());
+        Button cancelButton = new Button("Закрыть", e -> dialog.close());
         cancelButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
         //Кнопка сохранения
@@ -77,7 +85,8 @@ public class CreationDialog {
                         categoryField.getValue(),
                         numberField.getValue(),
                         releaseYearField.getValue(),
-                        typeField.getValue()));
+                        typeField.getValue(),
+                        trailerField.getValue().equals("Есть")));
                 dialog.close();
                 Notification notification = Notification
                         .show("ТС успешно сохранено", 2000, Notification.Position.TOP_END);
@@ -89,6 +98,9 @@ public class CreationDialog {
             }
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        saveButton.setEnabled(false);
+        binder.addStatusChangeListener(e ->
+                saveButton.setEnabled(binder.isValid()));
 
         dialog.getFooter().add(saveButton, cancelButton);
 
